@@ -2,14 +2,14 @@
 set -ex
 mkdir -p /deps && cd /deps
 
-cp /third-party/omvll-deps-xcode-*/LLVM-14.0.0git-arm64-Darwin.tar.gz .
-cp /third-party/omvll-deps-xcode-*/LLVM-14.0.0git-x86_64-Darwin.tar.gz .
+cp /third-party/omvll-deps-xcode-*/LLVM-16.0.0git-arm64-Darwin.tar.gz .
+cp /third-party/omvll-deps-xcode-*/LLVM-16.0.0git-x86_64-Darwin.tar.gz .
 cp /third-party/omvll-deps-xcode-*/Python-slim.tar.gz .
 cp /third-party/omvll-deps-xcode-*/pybind11.tar.gz .
 cp /third-party/omvll-deps-xcode-*/spdlog-1.10.0-Darwin.tar.gz .
 
-tar xzvf LLVM-14.0.0git-arm64-Darwin.tar.gz
-tar xzvf LLVM-14.0.0git-x86_64-Darwin.tar.gz
+tar xzvf LLVM-16.0.0git-arm64-Darwin.tar.gz
+tar xzvf LLVM-16.0.0git-x86_64-Darwin.tar.gz
 tar xzvf Python-slim.tar.gz
 tar xzvf pybind11.tar.gz
 tar xzvf spdlog-1.10.0-Darwin.tar.gz
@@ -39,7 +39,7 @@ cmake -GNinja ../.. \
       -DPython3_INCLUDE_DIR=/deps/include/python3.10 \
       -Dpybind11_DIR=/deps/share/cmake/pybind11 \
       -Dspdlog_DIR=/deps/lib/cmake/spdlog \
-      -DLLVM_DIR=/deps/LLVM-14.0.0git-arm64-Darwin/lib/cmake/llvm
+      -DLLVM_DIR=/deps/LLVM-16.0.0git-arm64-Darwin/lib/cmake/llvm
 
 ninja
 
@@ -63,7 +63,7 @@ cmake -GNinja ../.. \
       -DPython3_INCLUDE_DIR=/deps/include/python3.10 \
       -Dpybind11_DIR=/deps/share/cmake/pybind11 \
       -Dspdlog_DIR=/deps/lib/cmake/spdlog \
-      -DLLVM_DIR=/deps/LLVM-14.0.0git-x86_64-Darwin/lib/cmake/llvm
+      -DLLVM_DIR=/deps/LLVM-16.0.0git-x86_64-Darwin/lib/cmake/llvm
 
 ninja
 cd ..

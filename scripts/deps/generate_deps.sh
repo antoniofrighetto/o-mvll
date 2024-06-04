@@ -34,10 +34,12 @@ function generate_deps() {
         mv omvll-deps omvll-deps-ndk-r25c
         tar -cvf ../omvll-deps-ndk-r25c.tar omvll-deps-ndk-r25c
     elif [ "$platform" == "xcode" ]; then
-        ${SCRIPT_PATH}/xcode/compile_llvm_xcode14_1.sh
+        ${SCRIPT_PATH}/xcode/compile_llvm_xcode15_4.sh arm64
+        arch -x86_64 ${SCRIPT_PATH}/xcode/compile_llvm_xcode15_4.sh x86_64
+
         # Generate tar
-        mv omvll-deps omvll-deps-xcode-14_1
-        tar -cvf ../omvll-deps-xcode-14_1.tar omvll-deps-xcode-14_1
+        mv omvll-deps omvll-deps-xcode-15_4  
+        tar -cvf ../omvll-deps-xcode-15_4.tar omvll-deps-xcode-15_4
     fi
     cd ..
     rm -rf tmp
