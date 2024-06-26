@@ -2,7 +2,6 @@
 #include "omvll/log.hpp"
 
 #include <llvm/ADT/Hashing.h>
-#include <llvm/ADT/Optional.h>
 #include <llvm/IR/BasicBlock.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/InstIterator.h>
@@ -20,6 +19,8 @@
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Transforms/Utils/BasicBlockUtils.h>
 #include <llvm/Transforms/Utils/Local.h>
+
+#include <optional>
 
 using namespace llvm;
 
@@ -205,6 +206,8 @@ std::string TypeIDStr(const Type& Ty) {
     case Type::TypeID::ArrayTyID:          return "ArrayTyID";
     case Type::TypeID::FixedVectorTyID:    return "FixedVectorTyID";
     case Type::TypeID::ScalableVectorTyID: return "ScalableVectorTyID";
+    case Type::TypeID::TypedPointerTyID:
+      return "TypedPointerTyID";
   }
 }
 

@@ -504,7 +504,7 @@ bool StringEncoding::processGlobal(BasicBlock &BB, Instruction &I, Use &Op,
 
   auto JIT = StringEncoding::HOSTJIT->compile(*EI.HM);
   if (auto E = JIT->lookup("encode")) {
-    auto Enc = reinterpret_cast<enc_routine_t>(E->getAddress());
+    auto Enc = reinterpret_cast<enc_routine_t>(E->getValue());
     Enc(Encoded.data(), Str.data(), Key, StrSz);
   } else {
     fatalError("Can't find 'encode' in the routine");
@@ -605,7 +605,7 @@ bool StringEncoding::processOnStackLoop(BasicBlock& BB, Instruction& I, Use& Op,
 
   auto JIT = StringEncoding::HOSTJIT->compile(*EI.HM);
   if (auto E = JIT->lookup("encode")) {
-    auto Enc = reinterpret_cast<enc_routine_t>(E->getAddress());
+    auto Enc = reinterpret_cast<enc_routine_t>(E->getValue());
     Enc(Encoded.data(), Str.data(), key, StrSz);
   } else {
     fatalError("Can't find 'encode' in the routine");
