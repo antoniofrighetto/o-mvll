@@ -109,7 +109,7 @@ void EmitDefaultCaseAssembly(IRBTy& IRB, Triple TT) {
   }
 }
 
-bool ControlFlowFlattening::runOnFunction(Function& F, RandomNumberGenerator& RNG) {
+bool ControlFlowFlattening::runOnFunction(Function& F, RandomNumberGenerator& RNG, const LoopInfo &LI) {
   std::uniform_int_distribution<uint32_t> Dist(10);
   std::uniform_int_distribution<uint8_t> Dist8(10, 254);
   const uint8_t X = Dist8(RNG);
@@ -329,6 +329,10 @@ bool ControlFlowFlattening::runOnFunction(Function& F, RandomNumberGenerator& RN
     SDEBUG("[{}] Flattening {} ({})", ControlFlowFlattening::name(),
            ToString(*toFlat), ToString(*terminator));
 
+    // TODO[antonio]: do we need this?
+    if (LI.getLoopFor(toFlat))
+      continue;
+
     if (isa<ReturnInst>(terminator) || isa<UnreachableInst>(terminator)) {
       /* Typically a ret instruction
        * {
@@ -460,14 +464,23 @@ PreservedAnalyses ControlFlowFlattening::run(Module &M,
 
   bool Changed = false;
   for (Function& F : M) {
+    if (F.isDeclaration() || F.empty())
+      continue;
     if (!config.getUserConfig()->flatten_cfg(&M, &F))
       continue;
 
-    bool fChanged = runOnFunction(F, *RNG);
+    FunctionAnalysisManager FAM;
+    FAM.registerPass([&] { return ModuleAnalysisManagerFunctionProxy(MAM); });
+    FAM.registerPass([&] { return LoopAnalysis(); });
 
-    if (fChanged) {
+    PassBuilder PB;
+    PB.registerFunctionAnalyses(FAM);
+
+    const LoopInfo &LI = FAM.getResult<LoopAnalysis>(F);
+    bool fChanged = runOnFunction(F, *RNG, LI);
+
+    if (fChanged)
       reg2mem(F);
-    }
 
     Changed |= fChanged;
   }
